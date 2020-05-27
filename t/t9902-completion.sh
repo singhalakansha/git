@@ -1660,6 +1660,41 @@ test_expect_success 'git checkout - for -B with --no-track, complete local branc
 	EOF
 '
 
+test_expect_success 'git switch - with --orphan completes local branch names and unique remote branch names' '
+	test_completion "git switch --orphan " <<-\EOF
+	branch-in-other Z
+	master Z
+	master-in-other Z
+	matching-branch Z
+	EOF
+'
+
+test_expect_success 'git switch - --orphan with branch already provided completes nothing else' '
+	test_completion "git switch --orphan master " <<-\EOF
+
+	EOF
+'
+
+test_expect_success 'git checkout - with --orphan completes local branch names and unique remote branch names' '
+	test_completion "git checkout --orphan " <<-\EOF
+	branch-in-other Z
+	master Z
+	master-in-other Z
+	matching-branch Z
+	EOF
+'
+
+test_expect_success 'git checkout - --orphan with branch already provided completes local refs for a start-point' '
+	test_completion "git checkout --orphan master " <<-\EOF
+	HEAD Z
+	master Z
+	matching-branch Z
+	matching-tag Z
+	other/branch-in-other Z
+	other/master-in-other Z
+	EOF
+'
+
 test_expect_success 'teardown after ref completion' '
 	git branch -d matching-branch &&
 	git tag -d matching-tag &&
